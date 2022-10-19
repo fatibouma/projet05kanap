@@ -1,3 +1,4 @@
+console.log("test");
 let productEDLocalstorage = JSON.parse(localStorage.getItem("product"));
 const positionElement= document.getElementById("cart__items");
 for (const element of productEDLocalstorage) { 
