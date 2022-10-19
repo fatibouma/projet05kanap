@@ -4,7 +4,7 @@ const positionElement= document.getElementById("cart__items");
 for (const element of productEDLocalstorage) { 
 positionElement.insertAdjacentHTML(
     'beforeend',
-    '<article class="cart__item" data-id="'+ element._id +'"" data-color="' + element.colors +'">'+
+    '<article class="cart__item" data-id="'+ element.idProduitSelectionne +'"" data-color="' + element.colors +'">'+
 '<div class="cart__item__img">'+
   '<img src="' + element.imageUrl + '" alt="' + element.altTxt + '">'+
 '</div>'+
@@ -30,42 +30,97 @@ positionElement.insertAdjacentHTML(
 //----------MODIFIER LA QUANTITER DANS LA PAGE PANIER
 document.querySelectorAll(".itemQuantity").forEach(item => item.addEventListener("change", (e) => {
   let quantity = e.target.closest('.itemQuantity').value 
-for (let z = 0; z <quantity.length; z++){
-  let id_selectionner_quantite = productEDLocalstorage[z].idProduitSelectionne;
-  let colors_selectionner_colors = productEDLocalstorage[z].colors;
-  productEDLocalstorage.forEach(element => {
-    console.log(element);
-    console.log(id_selectionner_quantite);
-    if(
-     element.idProduitSelectionne == id_selectionner_quantite
-&& element.colors == colors_selectionner_colors
-    ){
-     (productEDLocalstorage[z].quantity = quantity);
-     console.log("ok");
-    }
-  })
-  localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
-};
-console.log(localStorage.getItem("product"));
-let quantiteTotalCalcul = [];
-// chercher les quantités---------
-for( let x = 0; x < productEDLocalstorage.length; x++){
-  let quantiteTotalDansPannier = productEDLocalstorage[x].quantity;
-  // mettre les quantités dans le variable
-  quantiteTotalCalcul.push(quantiteTotalDansPannier);
-totalQuantity.textContent = `${eval(quantiteTotalCalcul.join("+"))}`
-  };
+  // for (let z = 0; z < quantity.length; z++){
+    let id_selectionner_quantite = e.target.closest('[data-id]').dataset.id 
+    let colors_selectionner_colors = e.target.closest('[data-color]').dataset.color 
+
+    productEDLocalstorage.forEach(element => {
+
+      console.log(element.idProduitSelectionne, id_selectionner_quantite);
+
+      if(element.idProduitSelectionne == id_selectionner_quantite && element.colors == colors_selectionner_colors){
+        element.quantity = quantity;
+        console.log("ok");
+      }
+    })
+    localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
+  // };
+  console.log(localStorage.getItem("product"));
+  let quantiteTotalCalcul = [];
+
+
+
+  // chercher les quantités---------
+  for( let x = 0; x < productEDLocalstorage.length; x++){
+    let quantiteTotalDansPannier = productEDLocalstorage[x].quantity;
+    // mettre les quantités dans le variable
+    quantiteTotalCalcul.push(quantiteTotalDansPannier);
+  totalQuantity.textContent = `${eval(quantiteTotalCalcul.join("+"))}`
+    };
+
   //----- prix-total----------
-let prixCalcul = [];
-// chercher les prix---------s
-for( let x = 0; x < productEDLocalstorage.length; x++){
- let prixDansPannier = (productEDLocalstorage[x].price * productEDLocalstorage[x].quantity);
- prixCalcul.push(prixDansPannier);
-const reducer = (accumulator , currentValue) => accumulator + currentValue;
-const prixTotal = prixCalcul.reduce(reducer);
-totalPrice.textContent = `${prixTotal}`
-};
-}));
+  let prixCalcul = [];
+
+  // chercher les prix---------s
+  for( let x = 0; x < productEDLocalstorage.length; x++){
+  let prixDansPannier = (productEDLocalstorage[x].price * productEDLocalstorage[x].quantity);
+  prixCalcul.push(prixDansPannier);
+  const reducer = (accumulator , currentValue) => accumulator + currentValue;
+  const prixTotal = prixCalcul.reduce(reducer);
+  totalPrice.textContent = `${prixTotal}`
+  };
+}))
+
+//----------MODIFIER LA QUANTITER DANS LA PAGE PANIER
+// document.querySelectorAll(".itemQuantity").forEach(item => item.addEventListener("change", (e) => {
+//   let quantity = e.target.closest('.itemQuantity').value 
+//   console.log(quantity);
+// for (let x = 0; x <quantity.length; x++){
+  
+//   let id_selectionner_quantite = productEDLocalstorage[x].idProduitSelectionne;
+//   console.log(id_selectionner_quantite );
+//   console.log(productEDLocalstorage.length);
+//   let colors_selectionner_colors = productEDLocalstorage[x].colors;
+//   localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
+//   console.log("ko");
+//   productEDLocalstorage.forEach(element => {
+//     console.log(element);
+//     console.log(element.idProduitSelectionne);
+//     console.log(colors_selectionner_colors);
+//     console.log(element.colors);
+//     localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
+//     if(
+//      element.idProduitSelectionne == id_selectionner_quantite
+// && element.colors == colors_selectionner_colors
+//     ){
+//      (productEDLocalstorage[x].quantity = quantity);
+//      console.log(colors_selectionner_colors);
+//      console.log(quantity);
+//     }
+//   })
+//   localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
+// };
+// console.log(localStorage.getItem("product"));
+
+// let quantiteTotalCalcul = [];
+// // chercher les quantités---------
+// for( let x = 0; x < productEDLocalstorage.length; x++){
+//   let quantiteTotalDansPannier = productEDLocalstorage[x].quantity;
+//   // mettre les quantités dans le variable
+//   quantiteTotalCalcul.push(quantiteTotalDansPannier);
+// totalQuantity.textContent = `${eval(quantiteTotalCalcul.join("+"))}`
+//   };
+//   //----- prix-total----------
+// let prixCalcul = [];
+// // chercher les prix---------s
+// for( let x = 0; x < productEDLocalstorage.length; x++){
+//  let prixDansPannier = (productEDLocalstorage[x].price * productEDLocalstorage[x].quantity);
+//  prixCalcul.push(prixDansPannier);
+// const reducer = (accumulator , currentValue) => accumulator + currentValue;
+// const prixTotal = prixCalcul.reduce(reducer);
+// totalPrice.textContent = `${prixTotal}`
+// };
+// }));
 
 // //-----gestion du boutton suprimer -----
 let btnSupprimer = document.querySelectorAll('.deleteItem');
@@ -96,9 +151,9 @@ for( let x = 0; x < productEDLocalstorage.length; x++){
   quantiteTotalCalcul.push(quantiteTotalDansPannier);
 totalQuantity.textContent = `${eval(quantiteTotalCalcul.join("+"))}`
   };
-//----- prix-total----------
+// //----- prix-total----------
 let prixCalcul = [];
-// chercher les prix---------s
+// // chercher les prix---------s
 for( let x = 0; x < productEDLocalstorage.length; x++){
  let prixDansPannier = (productEDLocalstorage[x].price * productEDLocalstorage[x].quantity);
  prixCalcul.push(prixDansPannier);
@@ -164,7 +219,7 @@ function adresseControle(){
   if (regExAdresse(laAdresse)){
     return true;
   }else{
-  addressErrorMsg.innerHTML = "adresse commence par des chiffres et des lettres pas de caractéres spécial ni accent";
+  addressErrorMsg.innerHTML = "adresse commence par des chiffres et des lettres pas de caractéres spécial ";
     return false;
   }
 }
@@ -182,16 +237,87 @@ if (prenomControle() && nomControle() && villeControle() && adresseControle() &&
 //mettre l'objet "ormulaireValues" dans le local storage
   localStorage.setItem("formulaireValues", JSON.stringify(formulaireValues));
   alert("votre commande à été bien envoyer");
+  // window.location.href = " confirmation.html";
+
 }else{
   alert("Veuillez bien remlir le formulaire");
-}
+  }
+  
  // metre les valeur du formulaire et mettre les produits selectionnes dans un  objet à envoyer vers le serveur
-const aEnvoyer = {
-  productEDLocalstorage,
+// const aEnvoyer = {
+//   productEDLocalstorage,
+//   formulaireValues
+// };
+// console.log( aEnvoyer );
+// let panierEnvoyer=[]
+// let panier = JSON.parse(localStorage.getItem("product"));
+// console.log(panier);
+// let canape=localStorage.getItem("product");
+// console.log(canape.name);
+// for (element in canape ){
+//   canape.push(element.name)
+// }
+;
+let commandeId=[];
+console.log(commandeId);
+const commandeFinal = JSON.parse(localStorage.getItem("product"));
+console.log(commandeFinal);
+commandeFinal.forEach((commande)=> {
+  commandeId.push(commande.idProduitSelectionne);
+});
+console.log(commandeId);
+let data = {
+  commandeId,
   formulaireValues
-}
-console.log( aEnvoyer );
-   })
+};
+console.log(data);
+// JSON.stringify(data);
+// console.log(data);
 
+// console.log(data);
+// order.onclick = () =>{
+// const promis= fetch("http://localhost:3000/api/products/order", {
+//   method: "POST",
+//   body: data,
+//   headers: {
+//     'content-type" : "text/plain",
+//   }
+// }
+// var json = JSON.stringify(data);
+// console.log(json);
+fetch("http://localhost:3000/api/products/order", {
+  method: "post",
+  body:(data),
+  headers: {
+    "Content-Type": "application/json",
+  }
+})
+  .then((res) => res.json()) 
+  .then((promise) => {
+    let responseServeur =promise
+    console.log(responseServeur);
+    // window.location.href = `./../html/confirmation.html?orderId=${jsonData.orderId}`;
+  
+  });
+  
+// }});
+// promis.then(async(response)=>{
+//   try{
+//   const contenu = await response.json();
+// console.log("response")
 
- 
+//   }catch(e){
+// console.log(e);
+//   }
+// });
+// const promis1=fetch("http://localhost:3000/api/products/order")
+// promis1.then(async(response)=>{
+//   try{
+//   const donneeSurServeur = await response.json();
+// console.log("response")
+
+//   }catch(e){
+// console.log(e);
+//   }};
+  
+});
