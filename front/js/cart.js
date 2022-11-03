@@ -70,58 +70,6 @@ document.querySelectorAll(".itemQuantity").forEach(item => item.addEventListener
   totalPrice.textContent = `${prixTotal}`
   };
 }))
-
-//----------MODIFIER LA QUANTITER DANS LA PAGE PANIER
-// document.querySelectorAll(".itemQuantity").forEach(item => item.addEventListener("change", (e) => {
-//   let quantity = e.target.closest('.itemQuantity').value 
-//   console.log(quantity);
-// for (let x = 0; x <quantity.length; x++){
-  
-//   let id_selectionner_quantite = productEDLocalstorage[x].idProduitSelectionne;
-//   console.log(id_selectionner_quantite );
-//   console.log(productEDLocalstorage.length);
-//   let colors_selectionner_colors = productEDLocalstorage[x].colors;
-//   localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
-//   console.log("ko");
-//   productEDLocalstorage.forEach(element => {
-//     console.log(element);
-//     console.log(element.idProduitSelectionne);
-//     console.log(colors_selectionner_colors);
-//     console.log(element.colors);
-//     localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
-//     if(
-//      element.idProduitSelectionne == id_selectionner_quantite
-// && element.colors == colors_selectionner_colors
-//     ){
-//      (productEDLocalstorage[x].quantity = quantity);
-//      console.log(colors_selectionner_colors);
-//      console.log(quantity);
-//     }
-//   })
-//   localStorage.setItem("product", JSON.stringify( productEDLocalstorage));
-// };
-// console.log(localStorage.getItem("product"));
-
-// let quantiteTotalCalcul = [];
-// // chercher les quantités---------
-// for( let x = 0; x < productEDLocalstorage.length; x++){
-//   let quantiteTotalDansPannier = productEDLocalstorage[x].quantity;
-//   // mettre les quantités dans le variable
-//   quantiteTotalCalcul.push(quantiteTotalDansPannier);
-// totalQuantity.textContent = `${eval(quantiteTotalCalcul.join("+"))}`
-//   };
-//   //----- prix-total----------
-// let prixCalcul = [];
-// // chercher les prix---------s
-// for( let x = 0; x < productEDLocalstorage.length; x++){
-//  let prixDansPannier = (productEDLocalstorage[x].price * productEDLocalstorage[x].quantity);
-//  prixCalcul.push(prixDansPannier);
-// const reducer = (accumulator , currentValue) => accumulator + currentValue;
-// const prixTotal = prixCalcul.reduce(reducer);
-// totalPrice.textContent = `${prixTotal}`
-// };
-// }));
-
 // //-----gestion du boutton suprimer -----
 let btnSupprimer = document.querySelectorAll('.deleteItem');
 console.log(btnSupprimer);
@@ -161,19 +109,24 @@ const reducer = (accumulator , currentValue) => accumulator + currentValue;
 const prixTotal = prixCalcul.reduce(reducer);
 totalPrice.textContent = `${prixTotal}`
 }};
-
-
 //---------------------formulaire----
 const btnEnvoyerFormulaire = document.querySelector("#order");
  btnEnvoyerFormulaire.addEventListener("click", (e)=>{
   e.preventDefault();
   const formulaireValues = {
-    prenom : document.querySelector("#firstName").value,
-   nom :document.querySelector("#lastName").value,
-    adresse :document.querySelector("#address").value,
-    ville :document.querySelector("#city").value,
-   email : document.querySelector("#email").value,
+    firstName : document.querySelector("#firstName").value,
+    lastName :document.querySelector("#lastName").value,
+    address :document.querySelector("#address").value,
+    city :document.querySelector("#city").value,
+    email : document.querySelector("#email").value,
   }
+  // const formulaireValues = {
+  //   prenom : document.querySelector("#firstName").value,
+  //  nom :document.querySelector("#lastName").value,
+  //   adresse :document.querySelector("#address").value,
+  //   ville :document.querySelector("#city").value,
+  //  email : document.querySelector("#email").value,
+  // }
   console.log(formulaireValues);
   
 //----GESTION VALIDATION DU FORMULAIRE------
@@ -181,7 +134,8 @@ const regExPrenomNomVille = (value)=>{
 return /^([a-z A-Z]{2,25})?([-]{0,1})?([a-z A-Z]{2,25})$/.test(value);
 }
 const regExAdresse = (value) =>{
-  return /^[0-9]{1,3}[a-z A-Z]{3,25}$/.test(value)
+  return  null;
+  
 }
 const regExEmail = (value) =>{
   return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
@@ -215,13 +169,8 @@ function villeControle(){
   }
 }
 function adresseControle(){
-  const laAdresse =formulaireValues.adresse;
-  if (regExAdresse(laAdresse)){
     return true;
-  }else{
-  addressErrorMsg.innerHTML = "adresse commence par des chiffres et des lettres pas de caractéres spécial ";
-    return false;
-  }
+  
 }
 function emailControle(){
   const leEmail =formulaireValues.email;
@@ -244,80 +193,64 @@ if (prenomControle() && nomControle() && villeControle() && adresseControle() &&
   }
   
  // metre les valeur du formulaire et mettre les produits selectionnes dans un  objet à envoyer vers le serveur
-// const aEnvoyer = {
-//   productEDLocalstorage,
-//   formulaireValues
-// };
-// console.log( aEnvoyer );
-// let panierEnvoyer=[]
-// let panier = JSON.parse(localStorage.getItem("product"));
-// console.log(panier);
-// let canape=localStorage.getItem("product");
-// console.log(canape.name);
-// for (element in canape ){
-//   canape.push(element.name)
-// }
-;
+
 let commandeId=[];
-console.log(commandeId);
-const commandeFinal = JSON.parse(localStorage.getItem("product"));
-console.log(commandeFinal);
-commandeFinal.forEach((commande)=> {
-  commandeId.push(commande.idProduitSelectionne);
+    const commandeFinal = JSON.parse(localStorage.getItem("product"));
+
+    commandeFinal.forEach((commande)=> {
+      commandeId.push(commande.idProduitSelectionne);
+    });
+
+    console.log(commandeId);
+
+    console.log(formulaireValues);
+
+    let contact = formulaireValues;
+    let products = commandeId;
+
+    let data = JSON.stringify({contact, products});
+
+    console.log(data);
+
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      body: data
+    })
+    .then(res => {
+      return res.json();
+      })  
+       
+      .then((data) => {
+      console.log(data);
+      const datacommande = data;
+      console.log(datacommande);
+      commandeProduct =[];
+      commandeProduct.push(datacommande);
+      localStorage.setItem("commandes",JSON.stringify(commandeProduct));
+
+      // window.location.href = './../html/confirmation.html?orderId=' + data.orderId;
+ 
+    })
+    .catch(function (err) {
+      console.log("fetch Error");
+    });
+    const datacommande = data;
+    console.log(datacommande);
+    commandeProduct =[];
+    commandeProduct.push(datacommande);
+    localStorage.setItem("commandes",JSON.stringify(commandeProduct));
+    // function saveOrder(order) {
+    //   localStorage.setItem("order", JSON.stringify(order))
+    // }
+    // console.log("order");
+    // console.log(order);
+    // function cartorder() {
+    //   return JSON.parse(localStorage.getItem("order"));
+
 });
-console.log(commandeId);
-let data = {
-  commandeId,
-  formulaireValues
-};
-console.log(data);
-// JSON.stringify(data);
-// console.log(data);
 
-// console.log(data);
-// order.onclick = () =>{
-// const promis= fetch("http://localhost:3000/api/products/order", {
-//   method: "POST",
-//   body: data,
-//   headers: {
-//     'content-type" : "text/plain",
-//   }
-// }
-// var json = JSON.stringify(data);
-// console.log(json);
-fetch("http://localhost:3000/api/products/order", {
-  method: "post",
-  body:(data),
-  headers: {
-    "Content-Type": "application/json",
-  }
-})
-  .then((res) => res.json()) 
-  .then((promise) => {
-    let responseServeur =promise
-    console.log(responseServeur);
-    // window.location.href = `./../html/confirmation.html?orderId=${jsonData.orderId}`;
-  
-  });
-  
-// }});
-// promis.then(async(response)=>{
-//   try{
-//   const contenu = await response.json();
-// console.log("response")
-
-//   }catch(e){
-// console.log(e);
-//   }
-// });
-// const promis1=fetch("http://localhost:3000/api/products/order")
-// promis1.then(async(response)=>{
-//   try{
-//   const donneeSurServeur = await response.json();
-// console.log("response")
-
-//   }catch(e){
-// console.log(e);
-//   }};
-  
-});
